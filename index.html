@@ -31,9 +31,105 @@
   </head>
   <body>
 	<div class="container">
-		<h1>Hello, world!</h1>
+		
+		<canvas id="canvas"></canvas>
 		
 		<script>
+		
+		var canvas = document.getElementById("canvas");
+		var ctx = canvas.getContext("2d");
+		
+		canvas.width = $(window).width() * .9
+		canvas.height = $(window).height() * .9;
+		
+		var target = { x: canvas.width, y: canvas.height };
+		
+		ctx.beginPath();
+		ctx.fillStyle = "red";
+		ctx.arc(canvas.width, canvas.height, 50, 0, Math.PI * 2);
+		ctx.fill();
+		ctx.beginPath();
+		ctx.fillStyle = "white";
+		ctx.arc(canvas.width, canvas.height, 40, 0, Math.PI * 2);
+		ctx.fill();
+		ctx.beginPath();
+		ctx.fillStyle = "red";
+		ctx.arc(canvas.width, canvas.height, 30, 0, Math.PI * 2);
+		ctx.fill();
+		ctx.beginPath();
+		ctx.fillStyle = "white";
+		ctx.arc(canvas.width, canvas.height, 20, 0, Math.PI * 2);
+		ctx.fill();
+		ctx.beginPath();
+		ctx.fillStyle = "red";
+		ctx.arc(canvas.width, canvas.height, 10, 0, Math.PI * 2);
+		ctx.fill();
+		
+		var origin = { x: 0, y: 0 };
+		ctx.fillStyle = "black";
+		ctx.fillRect(0, 0, 5, 5);
+		
+		var fire = new Fire(origin, target);
+		var actors = [];
+		
+		var blackhole = new Blackhole(
+			canvas.width * .5,
+			canvas.height * .5,
+			80);
+		actors.push(blackhole);
+		
+		ctx.fillStyle = "grey";
+		ctx.beginPath();
+		ctx.arc(blackhole.x, blackhole.y, blackhole.mass, 0, Math.PI * 2);
+		ctx.fill();
+		
+		ctx.fillStyle = "black";
+		ctx.beginPath();
+		ctx.arc(blackhole.x, blackhole.y, 5, 0, Math.PI * 2);
+		ctx.fill();
+		
+		var ship = new Ship(
+			canvas.width * .25,
+			canvas.height * .75,
+			200);
+		actors.push(ship);
+		
+		ctx.fillStyle = "pink";
+		ctx.beginPath();
+		ctx.arc(ship.x, ship.y, ship.killRadius, 0, Math.PI * 2);
+		ctx.fill();
+		
+		ctx.fillStyle = "gray";
+		ctx.beginPath();
+		ctx.arc(ship.x, ship.y, 5, 0, Math.PI * 2);
+		ctx.fill();
+		
+		var p = fire.loadProjectile(65, 10);
+		
+		p.onMove = function(projectile) {
+			ctx.fillStyle = "green";
+			ctx.beginPath();
+			ctx.arc(projectile.currentP.x, projectile.currentP.y, 5, 0, Math.PI * 2);
+			ctx.fill();
+		}
+		
+		p.onDie = function(projectile) {
+			ctx.fillStyle = "red";
+			ctx.beginPath();
+			ctx.arc(projectile.currentP.x, projectile.currentP.y, 10, 0, Math.PI * 2);
+			ctx.fill();
+		}
+		
+		fire.onHitTarget = function(f, projectile) {
+			ctx.fillStyle = "blue";
+			
+			ctx.beginPath();
+			ctx.arc(projectile.currentP.x, projectile.currentP.y, 10, 0, Math.PI * 2);
+			ctx.fill();
+		}
+		
+		fire.fire(p, actors);
+		
 		</script>
 	</div>
   </body>
